@@ -55,4 +55,14 @@ public class ChatClientConfig {
                                 .build()).build())
                 .build();
     }
+    @Bean
+    public ChatClient deepSeekArthasTeacherChatClient(DeepSeekChatModel deepSeekChatModel,JdbcChatMemoryRepository jdbcChatMemoryRepository) {
+        return ChatClient.builder(deepSeekChatModel)
+                .defaultSystem(Prompt.ArthasTeacher)
+                .defaultAdvisors(MessageChatMemoryAdvisor
+                        .builder(MessageWindowChatMemory.builder()
+                                .maxMessages(10).chatMemoryRepository(jdbcChatMemoryRepository)
+                                .build()).build())
+                .build();
+    }
 }

@@ -22,6 +22,8 @@ public class ChatController {
 
     @Autowired
     public ChatClient deepSeekAuditChatClient;
+    @Autowired
+    public ChatClient deepSeekArthasTeacherChatClient;
 
 
     @Autowired
@@ -66,6 +68,16 @@ public class ChatController {
     public Flux<String> deepSeekAuditChatStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message
             , @RequestParam(value = "conversationId", defaultValue = "1000") String conversationId) {
         return deepSeekAuditChatClient.prompt().user(message)
+                .advisors(new CustomSimpleLoggerAdvisor())
+                .advisors(advisorSpec -> {
+                    advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId);
+                })
+                .stream().content();
+    }
+    @GetMapping(value = "/deepSeekArthasTeacherChatClient", produces = MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
+    public Flux<String> deepSeekArthasTeacherChatClientStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message
+            , @RequestParam(value = "conversationId", defaultValue = "1000") String conversationId) {
+        return deepSeekArthasTeacherChatClient.prompt().user(message)
                 .advisors(new CustomSimpleLoggerAdvisor())
                 .advisors(advisorSpec -> {
                     advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId);
