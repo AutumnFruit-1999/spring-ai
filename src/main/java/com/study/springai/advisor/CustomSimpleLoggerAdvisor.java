@@ -35,10 +35,8 @@ public class CustomSimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
 
-
         Prompt prompt = chatClientRequest.prompt();
         logger.info("user message: {}",prompt.getUserMessage().getText());
-
 
         Flux<ChatClientResponse> chatClientResponse = streamAdvisorChain.nextStream(chatClientRequest);
         return (new ChatClientMessageAggregator()).aggregateChatClientResponse(chatClientResponse, this::logResponse);
