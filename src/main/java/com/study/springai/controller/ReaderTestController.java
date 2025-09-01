@@ -5,7 +5,6 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.markdown.config.MarkdownDocumentReaderConfig;
 import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
-import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -59,39 +58,6 @@ public class ReaderTestController {
                         new Document("I love Java"));
         // 添加到向量数据库
         vectorStore.add(documents);
-
-        SimpleVectorStore vectorStore1 = (SimpleVectorStore) vectorStore;
-
-        Resource resource = new ClassPathResource("test.txt");
-        DocumentReaderStrategy instance = DocumentReaderStrategy.getInstance(resource);
-//        instance.setJsonKeysToUse("brand","description");
-        return instance.content(resource);
-    }
-
-    public static void main(String[] args) {
-//        System.out.println("System.currentTimeMillis() = " + System.currentTimeMillis());
-//        // 直接获取当前时间的秒级时间戳
-//        long timestampInSeconds = Instant.now().getEpochSecond();
-//
-//
-//        System.out.println("new Date(1756198110) = " + new Date(timestampInSeconds));
-//        System.out.println("new Date(System.currentTimeMillis()) = " + new Date(System.currentTimeMillis() / 1000));
-//
-//        System.out.println("当前时间戳 (秒): " + timestampInSeconds);
-        stackOverflowErrorDemo();
-
-    }
-
-    private static void stackOverflowErrorDemo() {
-        int threadCount = 0;
-        while (threadCount++ < 100_000_000) {     // ① 疯狂循环
-            int finalThreadCount = threadCount;
-            Thread.ofVirtual().name("ceshi").start(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println(" ==== " + finalThreadCount);
-                }
-            });
-        }
+        return vectorStore.similaritySearch("java");
     }
 }
