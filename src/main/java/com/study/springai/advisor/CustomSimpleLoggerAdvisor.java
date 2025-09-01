@@ -13,6 +13,8 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import reactor.core.publisher.Flux;
 
+import java.util.Objects;
+
 public class CustomSimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
 
     private static final Logger logger= LoggerFactory.getLogger(CustomSimpleLoggerAdvisor.class);
@@ -43,7 +45,7 @@ public class CustomSimpleLoggerAdvisor implements CallAdvisor, StreamAdvisor {
     }
 
     private void logResponse(ChatClientResponse chatClientResponse) {
-        AssistantMessage output = chatClientResponse.chatResponse().getResult().getOutput();
+        AssistantMessage output = Objects.requireNonNull(chatClientResponse.chatResponse(),"this chatResponse is null").getResult().getOutput();
         logger.info("response: {}", output.getText());
     }
 
